@@ -6,5 +6,12 @@ public class Item : InteractionObject {
 
 	public int id {get; protected set;}
     public string itemName {get; protected set;}
-    public InterfactionObjectEnum type {get; protected set;}
+    public ItemType type {get; protected set;}
+
+    public override void Interract(){
+        base.Interract();
+        Player.GetInstance().inventory.AddItem(this);
+        transform.SetParent(Player.GetInstance().transform);
+        gameObject.SetActive(false);
+    }
 }

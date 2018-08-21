@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TasksManager : MonoBehaviour
 {
-    public Task currentTask { get; private set; }
+    public IList<Task> tasks { get; private set; }
 
     public bool taskHintShowing { get; private set; }
 
@@ -22,6 +22,7 @@ public class TasksManager : MonoBehaviour
     void Awake()
     {
         tasksManager = this;
+        tasks = new List<Task>();
 
         taskHintShowing = false;
         taskHintShowingWhile = false;
@@ -49,9 +50,18 @@ public class TasksManager : MonoBehaviour
 
     public void SetTask(Task task)
     {
-        currentTask = task;
-
+        tasks.Add(task);
         OnTaskUpdated();
+    }
+
+    public void FinishTask(Task task)
+    {
+        task.completed = true;
+        tasks.Remove(task);
+        if (tasks.Count > 0)
+        {
+            OnTaskUpdated();
+        }
     }
 
     public void OnTaskUpdated()
@@ -83,21 +93,26 @@ public class TasksManager : MonoBehaviour
     private void ShowTaskHint()
     {
         string description;
-        if (currentTask != null)
+        if (tasks.Count > 0)
         {
-            description = currentTask.description;
-            IList<Task> subtasks = currentTask.subtasks;
-            for (int i = 0; i < subtasks.Count; i++)
+            description = "";
+            for (int t = 0; t < tasks.Count; t++)
             {
-                description = description + "\n\t-" + subtasks[i].description;
-                if (subtasks[i].completed)
+                description += tasks[t].description;
+                IList<Task> subtasks = tasks[t].subtasks;
+                for (int i = 0; i < subtasks.Count; i++)
                 {
-                    description = description + "(Completed)";
+                    description = description + "\n\t-" + subtasks[i].description;
+                    if (subtasks[i].completed)
+                    {
+                        description = description + "(Completed)";
+                    }
+                    else
+                    {
+                        description = description + "(In process)";
+                    }
                 }
-                else
-                {
-                    description = description + "(In process)";
-                }
+                description += "\n\n";
             }
         }
         else

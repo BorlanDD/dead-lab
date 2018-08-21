@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum InterfactionObjectEnum
+public enum ItemType
 {
 
     Item,
     Key,
     Ammo,
     Weapon,
-    First_Aid_Kit
+    First_Aid_Kit,
+    Battery
 
 }

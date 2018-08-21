@@ -8,18 +8,22 @@ public class Generator : InteractionObject
     public GameObject[] lights;
     public DoorScript[] doors;
 
-    private int generatorKeyId;
-    private InterfactionObjectEnum generatorKeyType;
+    private int generatorBatteryId;
+    private ItemType generatorBatteryType;
+    public Transform batteryPos;
 
+    [SerializeField] protected AudioClip generatorWorkingSound;
+    protected AudioSource _source;
 
     public override void OnStart()
     {
         base.OnStart();
         locked = true;
+        _source = GetComponent<AudioSource>();
 
-        generatorKeyId = 1;
-        generatorKeyType = InterfactionObjectEnum.Key;
 
+        generatorBatteryId = 1;
+        generatorBatteryType = ItemType.Battery;
     }
 
     public void SwitchOnLights()
@@ -58,12 +62,24 @@ public class Generator : InteractionObject
     {
         base.Interract();
         Inventory inventory = Player.GetInstance().inventory;
-        Item key = inventory.GetItem(generatorKeyId, generatorKeyType);
-        if (key != null)
+        Item battery = inventory.GetItem(generatorBatteryId, generatorBatteryType);
+        if (battery != null)
         {
             SwitchOnLights();
             UnlockDoors();
-            inventory.RemoveItem(key);
+            inventory.RemoveItem(battery);
+
+            locked = true;
+            battery.locked = true;
+
+            battery.gameObject.transform.SetPositionAndRotation(batteryPos.transform.position, batteryPos.transform.rotation);
+            battery.gameObject.transform.SetParent(batteryPos);
+            battery.gameObject.SetActive(true);
+
+            TasksManager.GetInstance().FinishTask(FindGeneratorTask.GetInstance());
+            _source.loop = true;
+            _source.clip = generatorWorkingSound;
+            _source.Play();
         }
         else
         {
@@ -71,7 +87,8 @@ public class Generator : InteractionObject
             if (fgt != null)
             {
                 FindGeneratorKeyTask fgkt = GetComponent<FindGeneratorKeyTask>();
-                if(!fgkt.started){
+                if (!fgkt.started)
+                {
                     fgkt.OnStart();
                     fgt.addSubTask(fgkt);
                     locked = true;

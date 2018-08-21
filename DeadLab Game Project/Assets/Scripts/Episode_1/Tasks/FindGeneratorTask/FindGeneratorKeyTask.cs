@@ -11,7 +11,7 @@ public class FindGeneratorKeyTask : Task {
 	}
 	public override void OnStart(){
 		findGeneratorKeyTask = this;
-		description = "Find generator key";
+		description = "Find generator battery.";
 		type = Type.Subtask;
 
 		base.OnStart();

@@ -23,7 +23,7 @@ public class Inventory : MonoBehaviour
         return null;
     }
 
-    public Item GetItem(int id, InterfactionObjectEnum type)
+    public Item GetItem(int id, ItemType type)
     {
         for (int i = 0; i < items.Count; i++)
         {
