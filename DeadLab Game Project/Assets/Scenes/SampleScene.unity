@@ -1255,9 +1255,6 @@ MonoBehaviour:
   boostSpeed: 4.5
   gravity: -9.8
   stepLenght: 1.5
-  staminaUse: 10
-  staminaIdleRestore: 12
-  staminaWalkRestore: 8
 --- !u!82 &83486654
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1364,8 +1361,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2680fe8fde15d64bb859a45f010643a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftLegSound: {fileID: 0}
-  rightLegSound: {fileID: 0}
+  soundFirstLeg: {fileID: 8300000, guid: 34288c01594fc1744a436586be309d33, type: 3}
+  soundSecondLeg: {fileID: 8300000, guid: 6a77544c92de8114baee40647535a600, type: 3}
+  stepLenght: 1.5
+  staminaUse: 12
+  staminaIdleRestore: 10
+  staminaWalkRestore: 6
 --- !u!114 &83486656
 MonoBehaviour:
   m_ObjectHideFlags: 0
