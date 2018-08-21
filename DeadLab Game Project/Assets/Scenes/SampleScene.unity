@@ -1258,10 +1258,6 @@ MonoBehaviour:
   staminaUse: 10
   staminaIdleRestore: 12
   staminaWalkRestore: 8
-  leftLegSound: {fileID: 8300000, guid: 6a77544c92de8114baee40647535a600, type: 3}
-  rightLegSound: {fileID: 8300000, guid: 34288c01594fc1744a436586be309d33, type: 3}
-  lightSwitchOnSound: {fileID: 8300000, guid: 6011fa3376710cb4dab9a77be1f9f13c, type: 3}
-  lightSwitchOffSound: {fileID: 8300000, guid: 431e5fa8c56bdc342b8158035042869f, type: 3}
 --- !u!82 &83486654
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1368,6 +1364,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2680fe8fde15d64bb859a45f010643a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leftLegSound: {fileID: 0}
+  rightLegSound: {fileID: 0}
 --- !u!114 &83486656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16601,7 +16599,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 6.6
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
