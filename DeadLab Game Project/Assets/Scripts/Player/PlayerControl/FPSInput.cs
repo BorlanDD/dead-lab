@@ -13,23 +13,9 @@ public class FPSInput : MonoBehaviour {
     public float gravity = -9.8f;
     public float stepLenght = 1.5f;
 
-    public float staminaUse = 12;
-    public float staminaIdleRestore = 10;
-    public float staminaWalkRestore = 6;
-
     private Player player;
     private CharacterController _charController;
     private AudioSource _source;
-
-    [SerializeField] private AudioClip leftLegSound;
-    [SerializeField] private AudioClip rightLegSound;
-
-    [SerializeField] private AudioClip lightSwitchOnSound;
-    [SerializeField] private AudioClip lightSwitchOffSound;
-
-    private float currentDistance;
-    private bool isLeftLeg;
-    private Flashlight _flashlight;
 
     // Use this for initialization
     void Start() {
@@ -37,40 +23,29 @@ public class FPSInput : MonoBehaviour {
         player = GetComponent<Player>();
 
         _charController = GetComponent<CharacterController>();
-		_flashlight = Flashlight.GetInstance();
 		_source = GetComponent<AudioSource>();
-
     }
 
     // Update is called once per frame
     void Update() {
-        float currentSpeed = normalSpeed;
 
         Interaction();
-
-        if (Input.GetKey(KeyCode.LeftShift) && !player.tired) {
-            currentSpeed = boostSpeed;
+        player.CurrentStatus = Player.Status.Walk;
+        float currentSpeed = normalSpeed;
+        if (Input.GetKey(KeyCode.LeftShift)) {
+            if (!player.tired) {
+                currentSpeed = boostSpeed;
+            }
+            player.CurrentStatus = Player.Status.Run;
         }
 
         float deltaX = Input.GetAxis("Horizontal") * currentSpeed;
         float deltaZ = Input.GetAxis("Vertical") * currentSpeed;
 
-        if (player.stamina < 100)
-        {
-            float staminaRestore = 0;
-            if (deltaX == 0 && deltaZ == 0)
-            {
-                staminaRestore = staminaIdleRestore;
-            }
-            else if (currentSpeed != boostSpeed)
-            {
-                staminaRestore = staminaWalkRestore;
-            }
-            if (staminaRestore != 0)
-            {
-                player.Resting(Time.deltaTime * staminaRestore);
-            }
+        if (deltaX == 0 && deltaZ == 0) {
+            player.CurrentStatus = Player.Status.Stand;
         }
+        
 
         Vector3 movement = new Vector3(deltaX, 0, deltaZ);
 
@@ -80,45 +55,15 @@ public class FPSInput : MonoBehaviour {
 
         movement *= Time.deltaTime;
         movement = transform.TransformDirection(movement);
-
-        Vector3 startingPos = _charController.transform.position;
         _charController.Move(movement);
 
-        currentDistance += Vector3.Distance(startingPos, _charController.transform.position);
-
-        if (currentDistance >= stepLenght)
-        {
-            _source.volume = 1.0f;
-            if (isLeftLeg)
-            {
-                _source.PlayOneShot(leftLegSound);
-                isLeftLeg = false;
-            }
-            else
-            {
-                _source.PlayOneShot(rightLegSound);
-                isLeftLeg = true;
-            }
-            currentDistance = 0f;
-
-            if (Input.GetKey(KeyCode.LeftShift) && !player.tired)
-            {
-                float staminaNeed = Time.deltaTime * staminaUse * stepLenght * 10;
-                player.Sprinting(staminaNeed);
-            }
-        }
-
         if (Input.GetKeyDown(KeyCode.F)) {
-            _flashlight.Switch();
+            Flashlight.GetInstance().Switch();
 		}
 
-
-        if (Input.GetKey(KeyCode.Tab) && !TasksManager.GetInstance().taskHintShowing)
-        {
+        if (Input.GetKey(KeyCode.Tab) && !TasksManager.GetInstance().taskHintShowing) {
             TasksManager.GetInstance().ShowTaskHint(true);
-        }
-        else if (!Input.GetKey(KeyCode.Tab) && TasksManager.GetInstance().taskHintShowing)
-        {
+        } else if (!Input.GetKey(KeyCode.Tab) && TasksManager.GetInstance().taskHintShowing) {
             TasksManager.GetInstance().ShowTaskHint(false);
         }
     }
