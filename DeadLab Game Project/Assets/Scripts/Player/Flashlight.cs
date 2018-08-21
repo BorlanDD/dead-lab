@@ -33,7 +33,7 @@ public class Flashlight : MonoBehaviour {
 
 	
 	private Light _spotlight;
-	private AudioSource _source;
+	private AudioSource audioSource;
 
 
 	public float dischargingRate = 15f;
@@ -49,7 +49,7 @@ public class Flashlight : MonoBehaviour {
 		active = true;
 		_spotlight = GetComponent<Light>();
 		maxRange = _spotlight.range;
-		_source = GetComponent<AudioSource>();
+		audioSource = GetComponent<AudioSource>();
 	}
 
 	//private 
@@ -103,9 +103,9 @@ public class Flashlight : MonoBehaviour {
 
 	public void Switch() {
 		if (!active) {
-			_source.PlayOneShot(lightSwitchOnSound);
+			audioSource.PlayOneShot(lightSwitchOnSound);
 		} else {
-			_source.PlayOneShot(lightSwitchOffSound);
+			audioSource.PlayOneShot(lightSwitchOffSound);
 		}
 		if (!isLowBattery) {
 			_spotlight.enabled = active = !active;
