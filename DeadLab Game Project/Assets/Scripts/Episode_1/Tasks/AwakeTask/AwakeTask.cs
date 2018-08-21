@@ -5,14 +5,24 @@ using UnityEngine;
 public class AwakeTask : Task
 {
 
+    private static AwakeTask awakeTask;
     public override void OnStart()
     {
+        awakeTask = this;
         description = "Understand what happen.";
         base.OnStart();
-
     }
 
-    public override void OnFinish(){
-        
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!started)
+        {
+            OnStart();
+        }
+    }
+
+    public static AwakeTask GetInstance()
+    {
+        return awakeTask;
     }
 }

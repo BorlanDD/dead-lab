@@ -2,10 +2,41 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FindGeneratorTask : Task {
+public class FindGeneratorTask : Task
+{
 
-	public override void OnStart(){
-		base.OnStart();
-		description = "Find and switch on energy generator.";
-	}
+    public static FindGeneratorTask findGeneratorTask;
+
+    public static FindGeneratorTask GetInstance()
+    {
+        return findGeneratorTask;
+    }
+
+    public Generator generator;
+
+    public override void OnStart()
+    {
+		findGeneratorTask = this;
+        description = "Find and switch on energy generator.";
+        base.OnStart();
+
+        AwakeTask awakeTask = AwakeTask.GetInstance();
+
+        if (awakeTask != null)
+        {
+            awakeTask.OnFinish();
+            Destroy(awakeTask.gameObject);
+        }
+        generator.LockDoors();
+        generator.SwitchOffLights();
+        generator.locked = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!started)
+        {
+            OnStart();
+        }
+    }
 }

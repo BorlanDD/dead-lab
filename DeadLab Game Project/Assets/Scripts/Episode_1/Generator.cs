@@ -7,8 +7,22 @@ public class Generator : InteractionObject
 
     public GameObject[] lights;
     public DoorScript[] doors;
-    
-    public void switchOnLights()
+
+    private int generatorKeyId;
+    private InterfactionObjectEnum generatorKeyType;
+
+
+    public override void OnStart()
+    {
+        base.OnStart();
+        locked = true;
+
+        generatorKeyId = 1;
+        generatorKeyType = InterfactionObjectEnum.Key;
+
+    }
+
+    public void SwitchOnLights()
     {
         for (int i = 0; i < lights.Length; i++)
         {
@@ -16,17 +30,15 @@ public class Generator : InteractionObject
         }
     }
 
-    public void switchOffLights()
+    public void SwitchOffLights()
     {
-        Debug.Log("OFFING: " + lights.Length);
         for (int i = 0; i < lights.Length; i++)
         {
-            Debug.Log("OFF");
             lights[i].SetActive(false);
         }
     }
 
-    public void lockDoors()
+    public void LockDoors()
     {
         for (int i = 0; i < doors.Length; i++)
         {
@@ -34,7 +46,7 @@ public class Generator : InteractionObject
         }
     }
 
-    public void unlockDoors()
+    public void UnlockDoors()
     {
         for (int i = 0; i < doors.Length; i++)
         {
@@ -42,8 +54,29 @@ public class Generator : InteractionObject
         }
     }
 
-    public override void interract()
+    public override void Interract()
     {
-        Debug.Log("interact");
+        base.Interract();
+        Inventory inventory = Player.GetInstance().inventory;
+        Item key = inventory.GetItem(generatorKeyId, generatorKeyType);
+        if (key != null)
+        {
+            SwitchOnLights();
+            UnlockDoors();
+            inventory.RemoveItem(key);
+        }
+        else
+        {
+            FindGeneratorTask fgt = (FindGeneratorTask)FindGeneratorTask.GetInstance();
+            if (fgt != null)
+            {
+                FindGeneratorKeyTask fgkt = GetComponent<FindGeneratorKeyTask>();
+                if(!fgkt.started){
+                    fgkt.OnStart();
+                    fgt.addSubTask(fgkt);
+                    locked = true;
+                }
+            }
+        }
     }
 }

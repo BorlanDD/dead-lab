@@ -11,6 +11,17 @@ public class Player : MonoBehaviour
     public int staminaCriticalLevel { get; private set; }
     public bool tired { get; private set; }
 
+    private static Player player;
+    public Inventory inventory {get; private set;}
+
+    void Awake(){
+        player = this;
+        inventory = GetComponent<Inventory>();
+    }
+    public static Player GetInstance(){
+        return player;
+    }
+
 
     // Use this for initialization
     void Start()

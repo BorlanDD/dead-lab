@@ -45,14 +45,19 @@ public class TasksManager : MonoBehaviour
 
     void Start()
     {
-        SetTask(new AwakeTask());
     }
 
     public void SetTask(Task task)
     {
         currentTask = task;
 
+        OnTaskUpdated();
+    }
+
+    public void OnTaskUpdated()
+    {
         taskHintShowingWhile = true;
+        taskHintShowingTime = 0;
         ShowTaskHint();
     }
 
@@ -81,6 +86,19 @@ public class TasksManager : MonoBehaviour
         if (currentTask != null)
         {
             description = currentTask.description;
+            IList<Task> subtasks = currentTask.subtasks;
+            for (int i = 0; i < subtasks.Count; i++)
+            {
+                description = description + "\n\t-" + subtasks[i].description;
+                if (subtasks[i].completed)
+                {
+                    description = description + "(Completed)";
+                }
+                else
+                {
+                    description = description + "(In process)";
+                }
+            }
         }
         else
         {

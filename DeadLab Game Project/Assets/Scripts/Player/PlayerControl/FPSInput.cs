@@ -39,6 +39,7 @@ public class FPSInput : MonoBehaviour {
         _charController = GetComponent<CharacterController>();
 		_flashlight = Flashlight.GetInstance();
 		_source = GetComponent<AudioSource>();
+
     }
 
     // Update is called once per frame
@@ -54,14 +55,19 @@ public class FPSInput : MonoBehaviour {
         float deltaX = Input.GetAxis("Horizontal") * currentSpeed;
         float deltaZ = Input.GetAxis("Vertical") * currentSpeed;
 
-        if (player.stamina < 100) {
+        if (player.stamina < 100)
+        {
             float staminaRestore = 0;
-            if (deltaX == 0 && deltaZ == 0) {
+            if (deltaX == 0 && deltaZ == 0)
+            {
                 staminaRestore = staminaIdleRestore;
-            } else if (currentSpeed != boostSpeed) {
+            }
+            else if (currentSpeed != boostSpeed)
+            {
                 staminaRestore = staminaWalkRestore;
             }
-            if (staminaRestore != 0) {
+            if (staminaRestore != 0)
+            {
                 player.Resting(Time.deltaTime * staminaRestore);
             }
         }
@@ -80,12 +86,16 @@ public class FPSInput : MonoBehaviour {
 
         currentDistance += Vector3.Distance(startingPos, _charController.transform.position);
 
-        if (currentDistance >= stepLenght) {
+        if (currentDistance >= stepLenght)
+        {
             _source.volume = 1.0f;
-            if (isLeftLeg) {
+            if (isLeftLeg)
+            {
                 _source.PlayOneShot(leftLegSound);
                 isLeftLeg = false;
-            } else {
+            }
+            else
+            {
                 _source.PlayOneShot(rightLegSound);
                 isLeftLeg = true;
             }
@@ -102,33 +112,45 @@ public class FPSInput : MonoBehaviour {
             _flashlight.Switch();
 		}
 
-        if (Input.GetKey(KeyCode.Tab) && !TasksManager.GetInstance().taskHintShowing) {
+
+        if (Input.GetKey(KeyCode.Tab) && !TasksManager.GetInstance().taskHintShowing)
+        {
             TasksManager.GetInstance().ShowTaskHint(true);
-        } else if (!Input.GetKey(KeyCode.Tab) && TasksManager.GetInstance().taskHintShowing) {
+        }
+        else if (!Input.GetKey(KeyCode.Tab) && TasksManager.GetInstance().taskHintShowing)
+        {
             TasksManager.GetInstance().ShowTaskHint(false);
         }
     }
 
-    private void Interaction() {
+    private void Interaction()
+    {
         RaycastHit hit;
         Camera cam = Camera.main;
         float width = cam.pixelWidth / 2;
         float height = cam.pixelHeight / 2;
         Ray ray = cam.ScreenPointToRay(new Vector3(width, height, 0));
 
-        if (Physics.Raycast(ray.origin, ray.direction, out hit, Mathf.Infinity, intractableLayerMask)) {
+        if (Physics.Raycast(ray.origin, ray.direction, out hit, Mathf.Infinity, intractableLayerMask))
+        {
 
             InteractionObject io = hit.transform.GetComponent<InteractionObject>();
-            if (io.targetInto) {
+            if (io.targetInto && !io.locked)
+            {
                 UserInterface.GetInstance().InteractionHintUIState(true);
-                if (Input.GetKeyDown(KeyCode.E)) {
-                    io.interract();
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    io.Interract();
                 }
-            } else {
+            }
+            else
+            {
                 UserInterface.GetInstance().InteractionHintUIState(false);
             }
             //Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
-        } else if (UserInterface.GetInstance().hintInteractionUI.activeSelf) {
+        }
+        else if (UserInterface.GetInstance().hintInteractionUI.activeSelf)
+        {
             UserInterface.GetInstance().InteractionHintUIState(false);
         }
     }
