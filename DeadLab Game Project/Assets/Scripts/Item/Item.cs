@@ -11,7 +11,5 @@ public class Item : InteractionObject {
     public override void Interract(){
         base.Interract();
         Player.GetInstance().inventory.AddItem(this);
-        transform.SetParent(Player.GetInstance().transform);
-        gameObject.SetActive(false);
     }
 }

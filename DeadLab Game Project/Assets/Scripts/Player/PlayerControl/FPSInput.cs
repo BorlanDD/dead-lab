@@ -5,7 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(AudioSource))]
 [AddComponentMenu("Control Script/FPS Input")]
-public class FPSInput : MonoBehaviour {
+public class FPSInput : MonoBehaviour
+{
 
     public int intractableLayerMask;
     public float normalSpeed = 3.0f;
@@ -15,25 +16,28 @@ public class FPSInput : MonoBehaviour {
 
     private Player player;
     private CharacterController _charController;
-    private AudioSource _source;
+
 
     // Use this for initialization
-    void Start() {
+    void Start()
+    {
         intractableLayerMask = 1 << 9;
         player = GetComponent<Player>();
 
         _charController = GetComponent<CharacterController>();
-		_source = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
 
         Interaction();
         player.CurrentStatus = Player.Status.Walk;
         float currentSpeed = normalSpeed;
-        if (Input.GetKey(KeyCode.LeftShift)) {
-            if (!player.tired) {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            if (!player.tired)
+            {
                 currentSpeed = boostSpeed;
             }
             player.CurrentStatus = Player.Status.Run;
@@ -42,10 +46,11 @@ public class FPSInput : MonoBehaviour {
         float deltaX = Input.GetAxis("Horizontal") * currentSpeed;
         float deltaZ = Input.GetAxis("Vertical") * currentSpeed;
 
-        if (deltaX == 0 && deltaZ == 0) {
+        if (deltaX == 0 && deltaZ == 0)
+        {
             player.CurrentStatus = Player.Status.Stand;
         }
-        
+
 
         Vector3 movement = new Vector3(deltaX, 0, deltaZ);
 
@@ -57,14 +62,58 @@ public class FPSInput : MonoBehaviour {
         movement = transform.TransformDirection(movement);
         _charController.Move(movement);
 
-        if (Input.GetKeyDown(KeyCode.F)) {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
             Flashlight.GetInstance().Switch();
-		}
+        }
 
-        if (Input.GetKey(KeyCode.Tab) && !TasksManager.GetInstance().taskHintShowing) {
+        if (Input.GetKey(KeyCode.Tab) && !TasksManager.GetInstance().taskHintShowing)
+        {
             TasksManager.GetInstance().ShowTaskHint(true);
-        } else if (!Input.GetKey(KeyCode.Tab) && TasksManager.GetInstance().taskHintShowing) {
+        }
+        else if (!Input.GetKey(KeyCode.Tab) && TasksManager.GetInstance().taskHintShowing)
+        {
             TasksManager.GetInstance().ShowTaskHint(false);
+        }
+
+        weaponInput();
+    }
+
+    private void weaponInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            player.SetWeapon(WeaponUtils.GetWeaponBySlot(1));
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            player.SetWeapon(WeaponUtils.GetWeaponBySlot(2));
+        }
+
+        if (Input.GetAxis("Fire1") > 0)
+        {
+            player.Fire();
+        }
+        else
+        {
+            if (player.usingWeapon != null && player.usingWeapon.singleShootLock)
+            {
+                player.usingWeapon.SingleShootUnlock();
+            }
+        }
+       
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            player.ReloadWeapon();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            player.ChangeFireMode(-1);
+        }
+        else if (Input.GetKeyDown(KeyCode.X))
+        {
+            player.ChangeFireMode(1);
         }
     }
 
@@ -76,9 +125,8 @@ public class FPSInput : MonoBehaviour {
         float height = cam.pixelHeight / 2;
         Ray ray = cam.ScreenPointToRay(new Vector3(width, height, 0));
 
-        if (Physics.Raycast(ray.origin, ray.direction, out hit, Mathf.Infinity, intractableLayerMask))
+        if (Physics.Raycast(ray.origin, ray.direction, out hit, 2, intractableLayerMask))
         {
-
             InteractionObject io = hit.transform.GetComponent<InteractionObject>();
             if (io.targetInto && !io.locked)
             {
@@ -92,11 +140,11 @@ public class FPSInput : MonoBehaviour {
             {
                 UserInterface.GetInstance().InteractionHintUIState(false);
             }
-            //Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
         }
         else if (UserInterface.GetInstance().hintInteractionUI.activeSelf)
         {
             UserInterface.GetInstance().InteractionHintUIState(false);
         }
+        Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.red);
     }
 }

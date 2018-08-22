@@ -34,7 +34,7 @@ public class FindGeneratorTask : Task
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!started)
+        if (!started && other.gameObject.tag == "Player")
         {
             OnStart();
         }

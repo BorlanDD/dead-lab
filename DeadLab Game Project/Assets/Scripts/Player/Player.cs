@@ -5,7 +5,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     #region Borland's code
-    public enum Status {
+    public enum Status
+    {
         Stand,
         Walk,
         Run
@@ -16,7 +17,7 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioClip soundSecondLeg;
     private AudioSource audioSource;
 
-    public Status CurrentStatus {get; set;}
+    public Status CurrentStatus { get; set; }
 
     private Vector3 prevPositionPlayer;
 
@@ -29,32 +30,43 @@ public class Player : MonoBehaviour
     public float staminaIdleRestore = 10;
     public float staminaWalkRestore = 6;
 
-    void Update() {
+    void Update()
+    {
         currentDistance += Vector3.Distance(prevPositionPlayer, transform.position);
         prevPositionPlayer = transform.position;
 
-        if (stamina < 100) {
+        if (stamina < 100)
+        {
             float staminaRestore = 0;
-            if (CurrentStatus == Status.Stand) {
+            if (CurrentStatus == Status.Stand)
+            {
                 staminaRestore = staminaIdleRestore;
-            } else if (CurrentStatus == Status.Walk) {
+            }
+            else if (CurrentStatus == Status.Walk)
+            {
                 staminaRestore = staminaWalkRestore;
             }
-            if (staminaRestore != 0) {
+            if (staminaRestore != 0)
+            {
                 player.Resting(Time.deltaTime * staminaRestore);
             }
         }
-        
-        if (currentDistance >= stepLenght) {
-            if (isFirstLeg) {
+
+        if (currentDistance >= stepLenght)
+        {
+            if (isFirstLeg)
+            {
                 audioSource.PlayOneShot(soundFirstLeg);
                 isFirstLeg = false;
-            } else {
+            }
+            else
+            {
                 audioSource.PlayOneShot(soundSecondLeg);
                 isFirstLeg = true;
             }
 
-            if (CurrentStatus == Status.Run && !player.tired) {
+            if (CurrentStatus == Status.Run && !player.tired)
+            {
                 float staminaNeed = Time.deltaTime * staminaUse * stepLenght * 10;
                 player.Sprinting(staminaNeed);
             }
@@ -70,15 +82,21 @@ public class Player : MonoBehaviour
     public int staminaCriticalLevel { get; private set; }
     public bool tired { get; private set; }
 
+    public Weapon usingWeapon { get; private set; }
+
     private static Player player;
-    public Inventory inventory {get; private set;}
+    public Inventory inventory;
+
+    public Transform handPosition;
 
 
-    void Awake(){
+    void Awake()
+    {
+        usingWeapon = null;
         player = this;
-        inventory = GetComponent<Inventory>();
     }
-    public static Player GetInstance(){
+    public static Player GetInstance()
+    {
         return player;
     }
 
@@ -116,5 +134,57 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void SetWeapon(Weapon weapon)
+    {
+        if (weapon == null)
+        {
+            return;
+        }
+        if (usingWeapon != null)
+        {
+            inventory.AddItem(usingWeapon);
+        }
+
+        weapon.transform.SetParent(handPosition);
+        weapon.transform.position = handPosition.transform.position;
+        weapon.transform.rotation = new Quaternion(0, 0, 0, 0);
+        weapon.gameObject.SetActive(true);
+        usingWeapon = weapon;
+        UserInterface.GetInstance().bulletCounteUpdate(usingWeapon.bulletCounts);
+    }
+
+    public void Fire()
+    {
+        if (usingWeapon != null)
+        {
+            usingWeapon.Fire();
+        }
+    }
+
+    public void ChangeFireMode(int direction)
+    {
+        if (usingWeapon == null)
+        {
+            return;
+        }
+
+        if (direction == 1)
+        {
+            usingWeapon.SetNextMode();
+        }
+        else if (direction == -1)
+        {
+            usingWeapon.SetPreviousMode();
+        }
+    }
+
+    public void ReloadWeapon()
+    {
+        if(!usingWeapon.NeedToReload())
+        {
+            return;
+        }
+        usingWeapon.Reload();
+    }
 
 }

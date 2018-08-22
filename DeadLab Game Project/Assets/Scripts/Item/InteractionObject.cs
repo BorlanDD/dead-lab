@@ -19,6 +19,11 @@ public class InteractionObject : MonoBehaviour
         OnAwake();
     }
 
+    private void Update()
+    {
+        OnUpdate();
+    }
+
     public virtual void OnStart()
     {
         targetInto = false;
@@ -26,9 +31,11 @@ public class InteractionObject : MonoBehaviour
     }
     public virtual void OnAwake() { }
 
+    public virtual void OnUpdate() { }
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag.Equals(targetTag))
+        if (other.tag.Equals(targetTag) && !locked)
         {
             targetInto = true;
         }
@@ -36,14 +43,16 @@ public class InteractionObject : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag.Equals(targetTag))
+        if (other.tag.Equals(targetTag) && !locked)
         {
             targetInto = false;
         }
     }
 
-    public virtual void Interract() {
-        if(locked){
+    public virtual void Interract()
+    {
+        if (locked)
+        {
             return;
         }
     }

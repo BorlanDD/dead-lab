@@ -8,8 +8,13 @@ public class UserInterface : MonoBehaviour
 
     #region Hints
     public GameObject hintInteractionUI;
+
     public Text taskHintUI;
 
+    #endregion
+
+    #region Weapon
+    public Text bulletCountUI;
     #endregion
 
     private static UserInterface userInterface;
@@ -46,5 +51,10 @@ public class UserInterface : MonoBehaviour
 
     public void HideTaskHint(){
         taskHintUI.gameObject.SetActive(false);
+    }
+
+    public void bulletCounteUpdate(int count)
+    {
+        bulletCountUI.text = "" + count;
     }
 }

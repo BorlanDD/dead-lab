@@ -7,7 +7,8 @@ public class Inventory : MonoBehaviour
 
     public IList<Item> items;
 
-    void Awake(){
+    void Awake()
+    {
         items = new List<Item>();
     }
 
@@ -35,15 +36,34 @@ public class Inventory : MonoBehaviour
         return null;
     }
 
-    public void AddItem(Item item){
-        items.Add(item);
+    public IList<Item> GetItemByType(ItemType type)
+    {
+        IList<Item> itemsByType = new List<Item>();
+        for (int i = 0; i < items.Count; i++)
+        {
+            if (type == items[i].type)
+            {
+                itemsByType.Add(items[i]);
+            }
+        }
+        return itemsByType;
     }
 
-    public void RemoveItem(Item item){
+    public void AddItem(Item item)
+    {
+        items.Add(item);
+        item.transform.SetParent(transform);
+        item.gameObject.SetActive(false);
+        item.locked = true;
+    }
+
+    public void RemoveItem(Item item)
+    {
         items.Remove(item);
     }
 
-    public void RemoveItem(int id){
+    public void RemoveItem(int id)
+    {
         items.Remove(GetItem(id));
     }
 }

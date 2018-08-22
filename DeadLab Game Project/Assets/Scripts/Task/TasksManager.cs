@@ -112,7 +112,7 @@ public class TasksManager : MonoBehaviour
                         description = description + "(In process)";
                     }
                 }
-                description += "\n\n";
+                description += "\n";
             }
         }
         else
