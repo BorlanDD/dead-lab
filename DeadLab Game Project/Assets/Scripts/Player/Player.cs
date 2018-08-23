@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+
         currentDistance += Vector3.Distance(prevPositionPlayer, transform.position);
         prevPositionPlayer = transform.position;
 
@@ -180,7 +181,7 @@ public class Player : MonoBehaviour
 
     public void ReloadWeapon()
     {
-        if(!usingWeapon.NeedToReload())
+        if (usingWeapon == null || !usingWeapon.NeedToReload())
         {
             return;
         }

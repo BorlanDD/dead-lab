@@ -145,6 +145,6 @@ public class FPSInput : MonoBehaviour
         {
             UserInterface.GetInstance().InteractionHintUIState(false);
         }
-        Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.red);
+        //Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.red);
     }
 }
