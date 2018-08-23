@@ -9,6 +9,7 @@ public class Glock18 : Weapon
     {
         base.OnAwake();
         name = "Glock-18";
+        weaponType = Type.Pistol;
 
         availableShootingModes.Add(ShootingMode.Single);
         availableShootingModes.Add(ShootingMode.Burst);

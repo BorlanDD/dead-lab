@@ -78,6 +78,11 @@ public class Player : MonoBehaviour
 
     #endregion
 
+    public static string EQUIP_ANIMATION = "_Equip";
+    public static string UNEQUIP_ANIMATION = "_Unequip";
+
+    public Animator animator;
+
     private int health;
     public float stamina { get; set; }
     public int staminaCriticalLevel { get; private set; }
@@ -88,11 +93,13 @@ public class Player : MonoBehaviour
     private static Player player;
     public Inventory inventory;
 
-    public Transform handPosition;
+    public Transform automatHandPosition;
 
+    public Transform pistolHandPosition;
 
     void Awake()
     {
+        // animator = GetComponent<Animator>();
         usingWeapon = null;
         player = this;
     }
@@ -110,6 +117,7 @@ public class Player : MonoBehaviour
         stamina = 100;
         staminaCriticalLevel = 20;
         tired = false;
+        settingWeapon = false;
     }
 
     public void Sprinting(float staminaNeed)
@@ -135,23 +143,82 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void SetWeapon(Weapon weapon)
+    public bool settingWeapon;
+
+    public void UnequipWeapon()
     {
+        if (lastWeapon == null && usingWeapon != null)
+        {
+            lastWeapon = usingWeapon;
+        }
+        else if (lastWeapon == null)
+        {
+            return;
+        }
+        usingWeapon = null;
+        animator.SetTrigger(lastWeapon.name + UNEQUIP_ANIMATION);
+    }
+
+    private Weapon lastWeapon;
+    public void TakeOffWeapon()
+    {
+        if (lastWeapon == null || (settingWeapon && lastWeapon == usingWeapon))
+        {
+            return;
+        }
+
+        lastWeapon.gameObject.SetActive(false);
+        inventory.AddItem(lastWeapon);
+        lastWeapon = null;
+    }
+
+    public void SetWeapon()
+    {
+        if(usingWeapon == null)
+        {
+            return;
+        }
+        
+        usingWeapon.gameObject.SetActive(true);
+        settingWeapon = false;
+    }
+
+    public void EquipWeapon(Weapon weapon)
+    {
+        if(settingWeapon)
+        {
+            return;
+        }
+        settingWeapon = true;
+
         if (weapon == null)
         {
             return;
         }
         if (usingWeapon != null)
         {
-            inventory.AddItem(usingWeapon);
+            lastWeapon = usingWeapon;
+            UnequipWeapon();
         }
 
-        weapon.transform.SetParent(handPosition);
-        weapon.transform.position = handPosition.transform.position;
+
+        Transform handPos = null;
+        if (weapon.weaponType == Weapon.Type.Pistol)
+        {
+            handPos = pistolHandPosition;
+        }
+        else if (weapon.weaponType == Weapon.Type.Automat)
+        {
+            handPos = automatHandPosition;
+        }
+
+        weapon.transform.SetParent(handPos);
+        weapon.transform.position = handPos.transform.position;
         weapon.transform.rotation = new Quaternion(0, 0, 0, 0);
-        weapon.gameObject.SetActive(true);
         usingWeapon = weapon;
         UserInterface.GetInstance().bulletCounteUpdate(usingWeapon.bulletCounts);
+
+        animator.SetTrigger(weapon.name + EQUIP_ANIMATION);
     }
 
     public void Fire()

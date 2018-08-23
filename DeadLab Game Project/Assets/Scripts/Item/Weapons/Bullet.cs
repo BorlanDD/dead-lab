@@ -28,8 +28,9 @@ public class Bullet : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag.Equals("Weapon"))
+        if (other.tag.Equals("Weapon") || other.tag.Equals("Player"))
         {
+            Debug.Log("Other: " + other);
             return;
         }
         else if (other.tag.Contains("Enemy"))

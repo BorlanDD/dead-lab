@@ -81,13 +81,27 @@ public class FPSInput : MonoBehaviour
 
     private void weaponInput()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha1) && !player.settingWeapon)
         {
-            player.SetWeapon(WeaponUtils.GetWeaponBySlot(1));
+            if (player.usingWeapon != null && player.usingWeapon.slot == 1)
+            {
+                player.UnequipWeapon();
+            }
+            else
+            {
+                player.EquipWeapon(WeaponUtils.GetWeaponBySlot(1));
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && !player.settingWeapon)
         {
-            player.SetWeapon(WeaponUtils.GetWeaponBySlot(2));
+            if (player.usingWeapon != null && player.usingWeapon.slot == 2)
+            {
+                player.UnequipWeapon();
+            }
+            else
+            {
+                player.EquipWeapon(WeaponUtils.GetWeaponBySlot(2));
+            }
         }
 
         if (Input.GetAxis("Fire1") > 0)
@@ -101,7 +115,7 @@ public class FPSInput : MonoBehaviour
                 player.usingWeapon.SingleShootUnlock();
             }
         }
-       
+
         if (Input.GetKeyDown(KeyCode.R))
         {
             player.ReloadWeapon();

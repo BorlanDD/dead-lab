@@ -13,19 +13,27 @@ public class Weapon : Item
         Automatic
     }
 
+    public enum Type
+    {
+        Pistol,
+        Automat
+    }
+
     public Rigidbody bulletPrefab;
     public Transform spawnPoint;
 
-    protected ShootingMode currentShootingMode;
+    public ShootingMode currentShootingMode { get; protected set; }
     protected IList<ShootingMode> availableShootingModes;
 
     protected Animator animator;
+
+    public Type weaponType { get; protected set; }
     public int slot;
     protected int maxbulletCounts;
     public int bulletCounts { get; protected set; }
     public int damage { get; protected set; }
 
-    protected bool lockedShoot;
+    public bool lockedShoot;
     private float lockedShootTimeLeft;
 
     protected int bulletSpeed;
@@ -55,7 +63,7 @@ public class Weapon : Item
         currentShootingMode = ShootingMode.Locked;
         availableShootingModes.Add(ShootingMode.Locked);
         currentMode = 0;
-        lockedShoot = false;
+        lockedShoot = true;
 
         singleShootLock = false;
 
@@ -224,5 +232,13 @@ public class Weapon : Item
             return true;
         }
         return false;
+    }
+
+    public void Setted()
+    {
+        if (currentShootingMode != ShootingMode.Locked)
+        {
+            lockedShoot = false;
+        }
     }
 }
