@@ -26,16 +26,25 @@ public class Player : MonoBehaviour
     private float currentDistance;
 
 
-    public float staminaUse = 12;
-    public float staminaIdleRestore = 10;
-    public float staminaWalkRestore = 6;
+    public float staminaUse = 0.12f;
+    public float staminaIdleRestore = 0.1f;
+    public float staminaWalkRestore = 0.05f;
+
+    private float prevDistance;
 
     void Update()
     {
         currentDistance += Vector3.Distance(prevPositionPlayer, transform.position);
+        if (currentDistance >= prevDistance) {
+
+        } else {
+
+        }
+        prevDistance = currentDistance;
+        
         prevPositionPlayer = transform.position;
 
-        if (stamina < 100)
+        if (stamina < 1f)
         {
             float staminaRestore = 0;
             if (CurrentStatus == Status.Stand)
@@ -48,7 +57,7 @@ public class Player : MonoBehaviour
             }
             if (staminaRestore != 0)
             {
-                player.Resting(Time.deltaTime * staminaRestore);
+                player.Resting(Time.deltaTime / staminaRestore);
             }
         }
 
@@ -67,11 +76,14 @@ public class Player : MonoBehaviour
 
             if (CurrentStatus == Status.Run && !player.tired)
             {
-                float staminaNeed = Time.deltaTime * staminaUse * stepLenght * 10;
+                float staminaNeed = Time.deltaTime * staminaUse * stepLenght / 10;
                 player.Sprinting(staminaNeed);
             }
             currentDistance = 0f;
         }
+
+        UserInterface.GetInstance().SetNeededStatus(CurrentStatus, tired);
+        UserInterface.GetInstance().ChangeStaminaLevel(stamina, tired, CurrentStatus);
     }
 
 
@@ -79,7 +91,7 @@ public class Player : MonoBehaviour
 
     private int health;
     public float stamina { get; set; }
-    public int staminaCriticalLevel { get; private set; }
+    public float staminaCriticalLevel { get; private set; }
     public bool tired { get; private set; }
 
     public Weapon usingWeapon { get; private set; }
@@ -106,8 +118,8 @@ public class Player : MonoBehaviour
     {
         audioSource = GetComponentInParent<AudioSource>();
         prevPositionPlayer = transform.position;
-        stamina = 100;
-        staminaCriticalLevel = 20;
+        stamina = 1f;
+        staminaCriticalLevel = 0.3f;
         tired = false;
     }
 
@@ -124,9 +136,9 @@ public class Player : MonoBehaviour
     public void Resting(float staminaRest)
     {
         stamina += staminaRest;
-        if (stamina > 100)
+        if (stamina > 1f)
         {
-            stamina = 100;
+            stamina = 1f;
         }
         if (stamina >= staminaCriticalLevel)
         {
@@ -180,7 +192,7 @@ public class Player : MonoBehaviour
 
     public void ReloadWeapon()
     {
-        if(!usingWeapon.NeedToReload())
+        if (!usingWeapon.NeedToReload())
         {
             return;
         }
