@@ -33,13 +33,19 @@ public class Player : MonoBehaviour
     private float prevDistance;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     void Update()
 =======
+=======
+>>>>>>> a35887b9b2daa7ff058b5f3edbdce9c46556e3f6
     public bool IsInMotion { get; set; }
 
     private float eps = 0.0001f;
 
     void FixedUpdate()
+<<<<<<< HEAD
+>>>>>>> a35887b9b2daa7ff058b5f3edbdce9c46556e3f6
+=======
 >>>>>>> a35887b9b2daa7ff058b5f3edbdce9c46556e3f6
     {
 
@@ -57,6 +63,7 @@ public class Player : MonoBehaviour
         prevPositionPlayer = transform.position;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         if (!animator.GetBool("Walk") && currentDistance > prevDistance)
         {
             animator.SetBool("Walk", true);
@@ -68,6 +75,9 @@ public class Player : MonoBehaviour
         prevDistance = currentDistance;
 
         if (stamina < 100)
+=======
+        if (IsInMotion && CurrentStatus == Status.Run && !tired)
+>>>>>>> a35887b9b2daa7ff058b5f3edbdce9c46556e3f6
 =======
         if (IsInMotion && CurrentStatus == Status.Run && !tired)
 >>>>>>> a35887b9b2daa7ff058b5f3edbdce9c46556e3f6
