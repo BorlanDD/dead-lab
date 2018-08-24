@@ -1571,8 +1571,8 @@ MonoBehaviour:
   staminaWalkRestore: 40
   animator: {fileID: 1141348059}
   inventory: {fileID: 1253568321}
-  automatHandPosition: {fileID: 0}
-  pistolHandPosition: {fileID: 0}
+  automatHandPosition: {fileID: 320941620}
+  pistolHandPosition: {fileID: 1734433831}
   settingWeapon: 0
 --- !u!114 &83486656
 MonoBehaviour:
@@ -3204,6 +3204,11 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!4 &320941620 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4730139095768276, guid: 1bfc634ce41c5524dbc43a9ccfd35fa4,
+    type: 2}
+  m_PrefabInternal: {fileID: 481526248}
 --- !u!1 &326044356
 GameObject:
   m_ObjectHideFlags: 0
@@ -15782,6 +15787,11 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1731067818}
   m_Mesh: {fileID: 4300000, guid: 76e9ef361c4cddf47ada7ef9b51c18a1, type: 3}
+--- !u!4 &1734433831 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4256930229552436, guid: 1bfc634ce41c5524dbc43a9ccfd35fa4,
+    type: 2}
+  m_PrefabInternal: {fileID: 481526248}
 --- !u!4 &1740193224 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4709563181638732, guid: b61430e763b30924cbe478ef8bd33a62,
