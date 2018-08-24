@@ -26,40 +26,60 @@ public class Player : MonoBehaviour
     private float currentDistance;
 
 
-    public float staminaUse = 0.12f;
-    public float staminaIdleRestore = 0.1f;
-    public float staminaWalkRestore = 0.05f;
+    public float staminaUse = 20f;
+    public float staminaIdleRestore = 25f;
+    public float staminaWalkRestore = 30f;
 
     private float prevDistance;
 
-    void Update()
+    public bool IsInMotion { get; set; }
+
+    private float eps = 0.0001f;
+
+    void FixedUpdate()
     {
         currentDistance += Vector3.Distance(prevPositionPlayer, transform.position);
-        if (currentDistance >= prevDistance) {
-
-        } else {
-
+        if (currentDistance > prevDistance + eps)
+        {
+            IsInMotion = true;
         }
+        else
+        {
+            IsInMotion = false;
+        }
+
         prevDistance = currentDistance;
-        
         prevPositionPlayer = transform.position;
 
-        if (stamina < 1f)
+        if (IsInMotion && CurrentStatus == Status.Run && !tired)
         {
-            float staminaRestore = 0;
-            if (CurrentStatus == Status.Stand)
+            player.Sprinting(Time.deltaTime / staminaUse);
+        }
+        else
+        {
+            if (stamina < 1f)
             {
-                staminaRestore = staminaIdleRestore;
-            }
-            else if (CurrentStatus == Status.Walk)
-            {
-                staminaRestore = staminaWalkRestore;
-            }
-            if (staminaRestore != 0)
-            {
-                player.Resting(Time.deltaTime / staminaRestore);
+                float staminaRestore = 0;
+                if (CurrentStatus == Status.Stand || !IsInMotion)
+                {
+                    staminaRestore = staminaIdleRestore;
+                }
+                else if (CurrentStatus == Status.Walk)
+                {
+                    staminaRestore = staminaWalkRestore;
+                }
+                else if (CurrentStatus == Status.Run && tired)
+                {
+                    staminaRestore = staminaWalkRestore;
+                }
+                if (staminaRestore != 0)
+                {
+                    player.Resting(Time.deltaTime / staminaRestore);
+                }
             }
         }
+
+
 
         if (currentDistance >= stepLenght)
         {
@@ -73,17 +93,8 @@ public class Player : MonoBehaviour
                 audioSource.PlayOneShot(soundSecondLeg);
                 isFirstLeg = true;
             }
-
-            if (CurrentStatus == Status.Run && !player.tired)
-            {
-                float staminaNeed = Time.deltaTime * staminaUse * stepLenght / 10;
-                player.Sprinting(staminaNeed);
-            }
-            currentDistance = 0f;
+            prevDistance = currentDistance = 0f;
         }
-
-        UserInterface.GetInstance().SetNeededStatus(CurrentStatus, tired);
-        UserInterface.GetInstance().ChangeStaminaLevel(stamina, tired, CurrentStatus);
     }
 
 
