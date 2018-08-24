@@ -9,16 +9,17 @@ public class Glock18 : Weapon
     {
         base.OnAwake();
         name = "Glock-18";
+        weaponType = Type.Pistol;
 
-				availableShootingModes.Add(ShootingMode.Single);
-				availableShootingModes.Add(ShootingMode.Burst);
+        availableShootingModes.Add(ShootingMode.Single);
+        availableShootingModes.Add(ShootingMode.Burst);
 
-				afterSingleDelay = 0.3f;
+        afterSingleDelay = 0.3f;
 
-				burstBulletCount = 3;
-				bulletSpeed = 45;
-				burstModeDelay = 0.08f;
-				afterBurstDelay = 0.75f;
+        burstBulletCount = 3;
+        bulletSpeed = 45;
+        burstModeDelay = 0.08f;
+        afterBurstDelay = 0.75f;
 
         slot = 1;
         maxbulletCounts = 18;
