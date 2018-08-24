@@ -30,7 +30,6 @@ public class Bullet : MonoBehaviour
     {
         if (other.tag.Equals("Weapon") || other.tag.Equals("Player"))
         {
-            Debug.Log("Other: " + other);
             return;
         }
         else if (other.tag.Contains("Enemy"))
@@ -46,9 +45,6 @@ public class Bullet : MonoBehaviour
             {
                 enemy.Die();
             }
-        } else 
-        {
-            Debug.Log(other.tag);
         }
 
         ReturnToPull();

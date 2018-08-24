@@ -5,10 +5,11 @@ using UnityEngine;
 public class Glock18 : Weapon
 {
 
+    public static string WEAPON_NAME = "Glock-18";
     public override void OnAwake()
     {
         base.OnAwake();
-        name = "Glock-18";
+        itemName = "Glock-18";
         weaponType = Type.Pistol;
 
         availableShootingModes.Add(ShootingMode.Single);

@@ -203,6 +203,14 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_GenerateMotionCurves: 0
   m_Events:
+  - time: 0.016666668
+    functionName: MakeSingleShot
+    data: 
+    objectReferenceParameter: {fileID: 1162120458225436, guid: fb7e655e8de61884b980dfe8d07b2dd3,
+      type: 2}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 0.06666667
     functionName: MakeShoot
     data: 

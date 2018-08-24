@@ -26,13 +26,21 @@ public class Flashlight : MonoBehaviour {
 	[SerializeField] private AudioClip lightSwitchOnSound;
 	[SerializeField] private AudioClip lightSwitchOffSound;
 
-	private float batteryLevel;
-	private bool active;
-	private bool isLowBattery;
+	public float BatteryLevel {get; set;}
+	public bool Active {get; set;}
+	public bool IsLowBattery {get; set;}
 	private float maxRange;
 
-	
-	private Light _spotlight;
+	public bool RaysActive
+    {
+        get
+        {
+            return _spotlight.enabled;
+        }
+    }
+
+
+    private Light _spotlight;
 	private AudioSource audioSource;
 
 
@@ -40,13 +48,13 @@ public class Flashlight : MonoBehaviour {
 	public float chargingRate = 20f;
 	public float lowLevel = 0.3f;
 	public float criticalLevel = 0.1f;
-	public float minRange = 4f;
+	public float minRange = 0.4f;
 
 
     // Use this for initialization
     void Start () {
-		batteryLevel = 1.0f;
-		active = true;
+		BatteryLevel = 1.0f;
+		Active = true;
 		_spotlight = GetComponent<Light>();
 		maxRange = _spotlight.range;
 		audioSource = GetComponent<AudioSource>();
@@ -55,7 +63,7 @@ public class Flashlight : MonoBehaviour {
 	//private 
 	void Update() {
 		if (isBlinked) {
-			StartBlink();
+			Blink();
 			ChangeBatteryLevel(Status.Discharge, Time.deltaTime / dischargingRate);
 		} else {
 			if (_spotlight.enabled) {
@@ -64,35 +72,37 @@ public class Flashlight : MonoBehaviour {
 				}
 			} else {
 				ChangeBatteryLevel(Status.Charge, Time.deltaTime / chargingRate);
-				if (active && !isLowBattery) {
+				if (Active && !IsLowBattery) {
 					_spotlight.enabled = true;
 				}
 			}
 		}
+
+		//UserInterface.GetInstance().ChangeBatteryLevel(BatteryLevel);
 	}
 
 	private bool ChangeBatteryLevel(Status status, float value) {
 		if (status == Status.Charge) {
-			if (batteryLevel >= 1.0f) {
+			if (BatteryLevel >= 1.0f) {
 				return false;
 			}
-			if (isLowBattery && batteryLevel >= lowLevel) {
-				isLowBattery = false;
+			if (IsLowBattery && BatteryLevel >= lowLevel) {
+				IsLowBattery = false;
 			}
-			batteryLevel += value;
+			BatteryLevel += value;
 		} else if (status == Status.Discharge) {
-			if (batteryLevel <= 0.0f) {
-				isLowBattery = true;
+			if (BatteryLevel <= 0.0f) {
+				IsLowBattery = true;
 				isBlinked = false;
 				return false;
 			}
-			batteryLevel -= value;
+			BatteryLevel -= value;
 		}
-		if (batteryLevel >= minRange / 10) {
-			_spotlight.range = batteryLevel * maxRange;
+		if (BatteryLevel >= minRange) {
+			_spotlight.range = BatteryLevel * maxRange;
 		}
 
-		if (batteryLevel <= criticalLevel && !isLowBattery) {
+		if (BatteryLevel <= criticalLevel && !IsLowBattery && Active) {
 			isBlinked = true;
 		} else {
 			isBlinked = false;
@@ -102,15 +112,16 @@ public class Flashlight : MonoBehaviour {
 	}
 
 	public void Switch() {
-		if (!active) {
+		if (!Active) {
 			audioSource.PlayOneShot(lightSwitchOnSound);
 		} else {
 			audioSource.PlayOneShot(lightSwitchOffSound);
 		}
-		if (!isLowBattery) {
-			_spotlight.enabled = active = !active;
+		if (!IsLowBattery) {
+			//isBlinked = false;
+			_spotlight.enabled = Active = !Active;
 		} else {
-			active = !active;
+			Active = !Active;
 		}
 	}
 
@@ -119,7 +130,7 @@ public class Flashlight : MonoBehaviour {
 		private float delayBetweenBlinks = 1f;
 		private float incrementStep = 0.14f;
 		private bool isBlinked = false;
-		private void StartBlink() {
+		private void Blink() {
 			if (current >= delayBetweenBlinks) {
 				_spotlight.enabled = !_spotlight.enabled;
 				current = 0;

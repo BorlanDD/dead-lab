@@ -26,32 +26,79 @@ public class Player : MonoBehaviour
     private float currentDistance;
 
 
-    public float staminaUse = 12;
-    public float staminaIdleRestore = 10;
-    public float staminaWalkRestore = 6;
+    public float staminaUse = 20f;
+    public float staminaIdleRestore = 25f;
+    public float staminaWalkRestore = 30f;
 
+    private float prevDistance;
+
+<<<<<<< HEAD
     void Update()
+=======
+    public bool IsInMotion { get; set; }
+
+    private float eps = 0.0001f;
+
+    void FixedUpdate()
+>>>>>>> a35887b9b2daa7ff058b5f3edbdce9c46556e3f6
     {
 
         currentDistance += Vector3.Distance(prevPositionPlayer, transform.position);
+        if (currentDistance > prevDistance + eps)
+        {
+            IsInMotion = true;
+        }
+        else
+        {
+            IsInMotion = false;
+        }
+
+        prevDistance = currentDistance;
         prevPositionPlayer = transform.position;
 
-        if (stamina < 100)
+<<<<<<< HEAD
+        if (!animator.GetBool("Walk") && currentDistance > prevDistance)
         {
-            float staminaRestore = 0;
-            if (CurrentStatus == Status.Stand)
+            animator.SetBool("Walk", true);
+        }
+        else if (CurrentStatus == Status.Stand)
+        {
+            animator.SetBool("Walk", false);
+        }
+        prevDistance = currentDistance;
+
+        if (stamina < 100)
+=======
+        if (IsInMotion && CurrentStatus == Status.Run && !tired)
+>>>>>>> a35887b9b2daa7ff058b5f3edbdce9c46556e3f6
+        {
+            player.Sprinting(Time.deltaTime / staminaUse);
+        }
+        else
+        {
+            if (stamina < 1f)
             {
-                staminaRestore = staminaIdleRestore;
-            }
-            else if (CurrentStatus == Status.Walk)
-            {
-                staminaRestore = staminaWalkRestore;
-            }
-            if (staminaRestore != 0)
-            {
-                player.Resting(Time.deltaTime * staminaRestore);
+                float staminaRestore = 0;
+                if (CurrentStatus == Status.Stand || !IsInMotion)
+                {
+                    staminaRestore = staminaIdleRestore;
+                }
+                else if (CurrentStatus == Status.Walk)
+                {
+                    staminaRestore = staminaWalkRestore;
+                }
+                else if (CurrentStatus == Status.Run && tired)
+                {
+                    staminaRestore = staminaWalkRestore;
+                }
+                if (staminaRestore != 0)
+                {
+                    player.Resting(Time.deltaTime / staminaRestore);
+                }
             }
         }
+
+
 
         if (currentDistance >= stepLenght)
         {
@@ -65,15 +112,10 @@ public class Player : MonoBehaviour
                 audioSource.PlayOneShot(soundSecondLeg);
                 isFirstLeg = true;
             }
-
-            if (CurrentStatus == Status.Run && !player.tired)
-            {
-                float staminaNeed = Time.deltaTime * staminaUse * stepLenght * 10;
-                player.Sprinting(staminaNeed);
-            }
-            currentDistance = 0f;
+            prevDistance = currentDistance = 0f;
         }
     }
+
 
 
     #endregion
@@ -85,7 +127,7 @@ public class Player : MonoBehaviour
 
     private int health;
     public float stamina { get; set; }
-    public int staminaCriticalLevel { get; private set; }
+    public float staminaCriticalLevel { get; private set; }
     public bool tired { get; private set; }
 
     public Weapon usingWeapon { get; private set; }
@@ -96,6 +138,7 @@ public class Player : MonoBehaviour
     public Transform automatHandPosition;
 
     public Transform pistolHandPosition;
+    public Transform glock18MagPos;
 
     void Awake()
     {
@@ -114,8 +157,8 @@ public class Player : MonoBehaviour
     {
         audioSource = GetComponentInParent<AudioSource>();
         prevPositionPlayer = transform.position;
-        stamina = 100;
-        staminaCriticalLevel = 20;
+        stamina = 1f;
+        staminaCriticalLevel = 0.3f;
         tired = false;
         settingWeapon = false;
     }
@@ -133,9 +176,9 @@ public class Player : MonoBehaviour
     public void Resting(float staminaRest)
     {
         stamina += staminaRest;
-        if (stamina > 100)
+        if (stamina > 1f)
         {
-            stamina = 100;
+            stamina = 1f;
         }
         if (stamina >= staminaCriticalLevel)
         {
@@ -156,7 +199,7 @@ public class Player : MonoBehaviour
             return;
         }
         usingWeapon = null;
-        animator.SetTrigger(lastWeapon.name + UNEQUIP_ANIMATION);
+        animator.SetTrigger(lastWeapon.itemName + UNEQUIP_ANIMATION);
     }
 
     private Weapon lastWeapon;
@@ -174,18 +217,18 @@ public class Player : MonoBehaviour
 
     public void SetWeapon()
     {
-        if(usingWeapon == null)
+        if (usingWeapon == null)
         {
             return;
         }
-        
+
         usingWeapon.gameObject.SetActive(true);
         settingWeapon = false;
     }
 
     public void EquipWeapon(Weapon weapon)
     {
-        if(settingWeapon)
+        if (settingWeapon)
         {
             return;
         }
@@ -218,7 +261,7 @@ public class Player : MonoBehaviour
         usingWeapon = weapon;
         UserInterface.GetInstance().bulletCounteUpdate(usingWeapon.bulletCounts);
 
-        animator.SetTrigger(weapon.name + EQUIP_ANIMATION);
+        animator.SetTrigger(weapon.itemName + EQUIP_ANIMATION);
     }
 
     public void Fire()
@@ -226,6 +269,14 @@ public class Player : MonoBehaviour
         if (usingWeapon != null)
         {
             usingWeapon.Fire();
+        }
+    }
+
+    public void StopShooting()
+    {
+        if (usingWeapon != null)
+        {
+            usingWeapon.StopShooting();
         }
     }
 
@@ -252,7 +303,11 @@ public class Player : MonoBehaviour
         {
             return;
         }
-        usingWeapon.Reload();
+        animator.SetTrigger(usingWeapon.itemName + "_Reload");
     }
 
+    public void ReloadedWeapon()
+    {
+        usingWeapon.Reload();
+    }
 }

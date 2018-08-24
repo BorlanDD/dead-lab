@@ -17,6 +17,8 @@ public class UserInterface : MonoBehaviour
     public Text bulletCountUI;
     #endregion
 
+
+    #region SINGLETON PATTERN
     private static UserInterface userInterface;
     public static UserInterface GetInstance()
     {
@@ -28,28 +30,21 @@ public class UserInterface : MonoBehaviour
         userInterface = this;
     }
 
-    // Use this for initialization
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
+    #endregion
 
     public void InteractionHintUIState(bool state)
     {
         hintInteractionUI.SetActive(state);
     }
 
-    public void ShowTaskHint(string description){
+    public void ShowTaskHint(string description)
+    {
         taskHintUI.text = description;
         taskHintUI.gameObject.SetActive(true);
     }
 
-    public void HideTaskHint(){
+    public void HideTaskHint()
+    {
         taskHintUI.gameObject.SetActive(false);
     }
 

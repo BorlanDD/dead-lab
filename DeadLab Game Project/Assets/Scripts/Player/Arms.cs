@@ -25,4 +25,23 @@ public class Arms : MonoBehaviour
         }
         player.usingWeapon.Setted();
     }
+
+    public void ReloadedWeapon()
+    {
+        player.ReloadedWeapon();
+    }
+
+    public void TakeMag()
+    {
+        Weapon weapon = player.usingWeapon;
+        if (weapon != null)
+        {
+            if (weapon.itemName.Equals(Glock18.WEAPON_NAME))
+            {
+                weapon.magazin.transform.position = player.glock18MagPos.position;
+                weapon.magazin.transform.SetParent(player.glock18MagPos);
+                Debug.Log("Set");
+            }
+        }
+    }
 }

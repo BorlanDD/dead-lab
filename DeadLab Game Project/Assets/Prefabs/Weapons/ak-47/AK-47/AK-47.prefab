@@ -876,4 +876,5 @@ MonoBehaviour:
     type: 2}
   spawnPoint: {fileID: 4315351043938118}
   slot: 0
+  lockedShoot: 0
   afterBurstDelay: 0

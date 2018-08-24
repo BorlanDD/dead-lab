@@ -51,7 +51,6 @@ public class FPSInput : MonoBehaviour
             player.CurrentStatus = Player.Status.Stand;
         }
 
-
         Vector3 movement = new Vector3(deltaX, 0, deltaZ);
 
         movement = Vector3.ClampMagnitude(movement, currentSpeed);
@@ -76,10 +75,10 @@ public class FPSInput : MonoBehaviour
             TasksManager.GetInstance().ShowTaskHint(false);
         }
 
-        weaponInput();
+        WeaponInput();
     }
 
-    private void weaponInput()
+    private void WeaponInput()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1) && !player.settingWeapon)
         {
@@ -110,9 +109,9 @@ public class FPSInput : MonoBehaviour
         }
         else
         {
-            if (player.usingWeapon != null && player.usingWeapon.singleShootLock)
+            if (player.usingWeapon != null)
             {
-                player.usingWeapon.SingleShootUnlock();
+                player.StopShooting();
             }
         }
 

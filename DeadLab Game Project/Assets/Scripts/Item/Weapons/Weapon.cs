@@ -5,6 +5,10 @@ using UnityEngine;
 public class Weapon : Item
 {
 
+    public static string SINGLE_FIRE = "Fire_Single";
+    public static string BURST_FIRE = "Fire_Burst";
+    public static string AUTOMATIC_FIRE = "Fire_Automatic";
+
     public enum ShootingMode
     {
         Locked,
@@ -26,6 +30,8 @@ public class Weapon : Item
     protected IList<ShootingMode> availableShootingModes;
 
     protected Animator animator;
+
+    public GameObject magazin;
 
     public Type weaponType { get; protected set; }
     public int slot;
@@ -129,14 +135,16 @@ public class Weapon : Item
         burstModeTimeLeft = 0;
     }
 
+    private ShootingMode shotMode;
     public void Fire()
     {
-        if (currentShootingMode == ShootingMode.Locked || lockedShoot
+        if (bulletCounts == 0 || currentShootingMode == ShootingMode.Locked || lockedShoot
          || (currentShootingMode == ShootingMode.Single && singleShootLock))
         {
             return;
         }
 
+        Player player = Player.GetInstance();
         if (animator != null)
         {
             lockedShoot = true;
@@ -152,16 +160,35 @@ public class Weapon : Item
             else if (currentShootingMode == ShootingMode.Automatic)
             {
                 MakeShoot();
+                if (!Player.GetInstance().animator.GetBool(itemName + "_" + AUTOMATIC_FIRE))
+                {
+                    Player.GetInstance().animator.SetBool(itemName + "_" + AUTOMATIC_FIRE, true);
+                }
             }
+        }
+        shotMode = currentShootingMode;
+    }
+
+    public void StopShooting()
+    {
+        if (availableShootingModes.Contains(ShootingMode.Automatic) &&  Player.GetInstance().animator.GetBool(itemName + "_" + AUTOMATIC_FIRE))
+        {
+            Player.GetInstance().animator.SetBool(itemName + "_" + AUTOMATIC_FIRE, false);
+        }
+
+        if (singleShootLock)
+        {
+            singleShootLock = false;
         }
     }
 
-    private bool MakeShoot()
+    public void MakeSingleShot()
     {
-        if (bulletCounts <= 0)
-        {
-            return false;
-        }
+        Player.GetInstance().animator.SetTrigger(itemName + "_" + SINGLE_FIRE);
+    }
+
+    private void MakeShoot()
+    {
 
         Bullet bullet = BulletsPull.GetInstnace().GetBullet();
         bullet.transform.SetPositionAndRotation(spawnPoint.transform.position, spawnPoint.transform.rotation);
@@ -178,7 +205,8 @@ public class Weapon : Item
         {
             Player.GetInstance().ReloadWeapon();
         }
-        return true;
+
+        shotMode = ShootingMode.Locked;
     }
 
     public void SetShootingMode(ShootingMode mode)
@@ -212,11 +240,6 @@ public class Weapon : Item
             currentMode = availableShootingModes.Count - 1;
         }
         currentShootingMode = availableShootingModes[currentMode];
-    }
-
-    public void SingleShootUnlock()
-    {
-        singleShootLock = false;
     }
 
     public void Reload()
