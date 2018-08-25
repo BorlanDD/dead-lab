@@ -1571,19 +1571,9 @@ MonoBehaviour:
   staminaWalkRestore: 40
   animator: {fileID: 1141348059}
   inventory: {fileID: 1253568321}
-<<<<<<< HEAD
-<<<<<<< HEAD
   automatHandPosition: {fileID: 939203695}
   pistolHandPosition: {fileID: 1208761190}
   glock18MagPos: {fileID: 339648606}
-=======
-  automatHandPosition: {fileID: 320941620}
-  pistolHandPosition: {fileID: 1734433831}
->>>>>>> a35887b9b2daa7ff058b5f3edbdce9c46556e3f6
-=======
-  automatHandPosition: {fileID: 320941620}
-  pistolHandPosition: {fileID: 1734433831}
->>>>>>> a35887b9b2daa7ff058b5f3edbdce9c46556e3f6
   settingWeapon: 0
 --- !u!114 &83486656
 MonoBehaviour:
@@ -3401,10 +3391,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 333814464}
   m_Mesh: {fileID: 4300000, guid: a8d41a781ad8cfc44861b5ec6f0ca527, type: 3}
-<<<<<<< HEAD
-<<<<<<< HEAD
---- !u!1 &339648605
-=======
+
 --- !u!1001 &360484929
 Prefab:
   m_ObjectHideFlags: 0
@@ -3476,7 +3463,6 @@ Prefab:
   m_SourcePrefab: {fileID: 100100000, guid: fb7e655e8de61884b980dfe8d07b2dd3, type: 2}
   m_IsPrefabAsset: 0
 --- !u!1 &361924308
->>>>>>> a35887b9b2daa7ff058b5f3edbdce9c46556e3f6
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3504,7 +3490,6 @@ Transform:
   m_Father: {fileID: 1267717651}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: -194.788, y: 311.266, z: 63.110992}
-=======
 --- !u!1001 &360484929
 Prefab:
   m_ObjectHideFlags: 0
@@ -3575,7 +3560,6 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb7e655e8de61884b980dfe8d07b2dd3, type: 2}
   m_IsPrefabAsset: 0
->>>>>>> a35887b9b2daa7ff058b5f3edbdce9c46556e3f6
 --- !u!1 &361924308
 GameObject:
   m_ObjectHideFlags: 0
@@ -6458,7 +6442,6 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-<<<<<<< HEAD
   m_GameObject: {fileID: 587287701}
   m_Mesh: {fileID: 4300000, guid: b5fbc56a2d663d24fb1c993e7607ac89, type: 3}
 --- !u!1 &589516275
@@ -6531,8 +6514,6 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-=======
->>>>>>> a35887b9b2daa7ff058b5f3edbdce9c46556e3f6
   m_GameObject: {fileID: 589516275}
   m_Mesh: {fileID: 4300004, guid: 346ee0f02a684264daa1abbe17faa16d, type: 3}
 --- !u!1 &643016208
@@ -14837,8 +14818,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.4577271, y: 2.4206161, z: 2.0777092}
   m_Center: {x: 0, y: 1.2283351, z: -0.08621028}
-<<<<<<< HEAD
-=======
 --- !u!1001 &1594265441
 Prefab:
   m_ObjectHideFlags: 0
@@ -14881,7 +14860,6 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb7e655e8de61884b980dfe8d07b2dd3, type: 2}
   m_IsPrefabAsset: 0
->>>>>>> a35887b9b2daa7ff058b5f3edbdce9c46556e3f6
 --- !u!1 &1599476678
 GameObject:
   m_ObjectHideFlags: 0

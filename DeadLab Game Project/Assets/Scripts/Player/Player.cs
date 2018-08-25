@@ -32,23 +32,12 @@ public class Player : MonoBehaviour
 
     private float prevDistance;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    void Update()
-=======
-=======
->>>>>>> a35887b9b2daa7ff058b5f3edbdce9c46556e3f6
     public bool IsInMotion { get; set; }
 
     private float eps = 0.0001f;
 
     void FixedUpdate()
-<<<<<<< HEAD
->>>>>>> a35887b9b2daa7ff058b5f3edbdce9c46556e3f6
-=======
->>>>>>> a35887b9b2daa7ff058b5f3edbdce9c46556e3f6
     {
-
         currentDistance += Vector3.Distance(prevPositionPlayer, transform.position);
         if (currentDistance > prevDistance + eps)
         {
@@ -62,9 +51,7 @@ public class Player : MonoBehaviour
         prevDistance = currentDistance;
         prevPositionPlayer = transform.position;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-        if (!animator.GetBool("Walk") && currentDistance > prevDistance)
+        if (!animator.GetBool("Walk") && IsInMotion)
         {
             animator.SetBool("Walk", true);
         }
@@ -72,15 +59,9 @@ public class Player : MonoBehaviour
         {
             animator.SetBool("Walk", false);
         }
-        prevDistance = currentDistance;
 
-        if (stamina < 100)
-=======
+
         if (IsInMotion && CurrentStatus == Status.Run && !tired)
->>>>>>> a35887b9b2daa7ff058b5f3edbdce9c46556e3f6
-=======
-        if (IsInMotion && CurrentStatus == Status.Run && !tired)
->>>>>>> a35887b9b2daa7ff058b5f3edbdce9c46556e3f6
         {
             player.Sprinting(Time.deltaTime / staminaUse);
         }
@@ -269,7 +250,9 @@ public class Player : MonoBehaviour
         weapon.transform.position = handPos.transform.position;
         weapon.transform.rotation = new Quaternion(0, 0, 0, 0);
         usingWeapon = weapon;
-        UserInterface.GetInstance().bulletCounteUpdate(usingWeapon.bulletCounts);
+        //UserInterface.GetInstance().bulletCounteUpdate(usingWeapon.bulletCounts);
+        WeaponUI.GetInstance().UpdateSprite(weapon);
+        WeaponUI.GetInstance().BulletCountUpdate(usingWeapon.bulletCounts);
 
         animator.SetTrigger(weapon.itemName + EQUIP_ANIMATION);
     }

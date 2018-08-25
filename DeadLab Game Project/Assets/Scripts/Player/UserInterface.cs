@@ -13,9 +13,9 @@ public class UserInterface : MonoBehaviour
 
     #endregion
 
-    #region Weapon
+    /* #region Weapon
     public Text bulletCountUI;
-    #endregion
+    #endregion */
 
 
     #region SINGLETON PATTERN
@@ -48,8 +48,8 @@ public class UserInterface : MonoBehaviour
         taskHintUI.gameObject.SetActive(false);
     }
 
-    public void bulletCounteUpdate(int count)
+    /* public void bulletCounteUpdate(int count)
     {
         bulletCountUI.text = "" + count;
-    }
+    } */
 }

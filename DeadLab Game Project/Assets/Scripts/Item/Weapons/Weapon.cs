@@ -199,7 +199,8 @@ public class Weapon : Item
         bulletRB.velocity = spawnPoint.TransformDirection(new Vector3(0, 0, bulletSpeed));
         bulletCounts--;
 
-        UserInterface.GetInstance().bulletCounteUpdate(bulletCounts);
+        //UserInterface.GetInstance().bulletCounteUpdate(bulletCounts);
+        WeaponUI.GetInstance().BulletCountUpdate(bulletCounts);
 
         if (bulletCounts <= 0)
         {
@@ -245,7 +246,8 @@ public class Weapon : Item
     public void Reload()
     {
         bulletCounts = maxbulletCounts;
-        UserInterface.GetInstance().bulletCounteUpdate(bulletCounts);
+        WeaponUI.GetInstance().BulletCountUpdate(bulletCounts);
+        //UserInterface.GetInstance().bulletCounteUpdate(bulletCounts);
     }
 
     public bool NeedToReload()
